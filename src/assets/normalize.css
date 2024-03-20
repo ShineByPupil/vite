@@ -86,3 +86,9 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+html,
+body,
+#app {
+  height: 100%;
+}

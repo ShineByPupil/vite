@@ -3,7 +3,7 @@
 <template>
   <div>login</div>
 
-  <a-space wrap>
+  <a-space>
     <a-button type="primary">Primary Button</a-button>
     <a-button>Default Button</a-button>
     <a-button type="dashed">Dashed Button</a-button>
