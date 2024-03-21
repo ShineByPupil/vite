@@ -50,11 +50,16 @@ const handleOpenChange = (openKeys: string[]) => {
 
 // 更新侧边栏的状态
 router.beforeEach((to, from) => {
-  state.selectedKeys[0] =
-    (to.path.match(/\//g) || []).length > 1
-      ? /[^/]*$/.exec(to.path)![0]
-      : to.path;
-  state.openKeys = to.path.match(/\/[^/]*/g) || [];
+  if ((to.path.match(/\//g) || []).length > 1) {
+    state.selectedKeys[0] = /[^/]*$/.exec(to.path)![0];
+    let _openKeys = to.path.split("/").filter(Boolean);
+    _openKeys[0] = "/" + _openKeys[0];
+    state.openKeys = _openKeys;
+  } else {
+    state.selectedKeys[0] = to.path;
+    state.openKeys = to.path.match(/\/[^/]*/g) || ["/"];
+  }
+
   console.log("beforeEach", to, from);
 });
 </script>
