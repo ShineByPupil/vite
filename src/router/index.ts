@@ -36,6 +36,11 @@ export const routes = [
         name: "proxy",
         component: () => import("@/views/student/proxy/Proxy.vue"),
       },
+      {
+        path: "bigint",
+        name: "bigint",
+        component: () => import("@/views/student/bigInt/BigInt.vue"),
+      },
     ],
   },
 ];

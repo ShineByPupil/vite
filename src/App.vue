@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { reactive, watch, h, getCurrentInstance, onMounted, ref } from "vue";
+import { reactive, h, getCurrentInstance, ref } from "vue";
 (window as any).v = getCurrentInstance();
 import { useRouter } from "vue-router";
 import { routes } from "@/router/index";
 import {
-  MailOutlined,
+  BarsOutlined,
+  FileOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from "@ant-design/icons-vue";
@@ -24,7 +25,7 @@ function getItem(list: any[]): ItemType[] {
     return {
       label: n.name,
       key: n.path,
-      icon: () => h(MailOutlined),
+      icon: () => h(n.children ? BarsOutlined : FileOutlined),
       children: n.children ? getItem(n.children) : undefined,
     };
   });
