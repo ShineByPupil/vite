@@ -22,14 +22,6 @@ export const routes = [
         path: "promise",
         name: "promise",
         component: () => import("../views/student/promise/Promise.vue"),
-        children: [
-          {
-            path: "promiseChildren",
-            name: "promiseChildren",
-            component: () =>
-              import("../views/student/promise/PromiseChildren.vue"),
-          },
-        ],
       },
       {
         path: "proxy",
@@ -59,6 +51,11 @@ export const routes = [
             path: "demo3",
             name: "demo3",
             component: () => import("@/views/student/vueJsx/demo3.vue"),
+          },
+          {
+            path: "demo4",
+            name: "demo4",
+            component: () => import("@/views/student/vueJsx/demo4.vue"),
           },
         ],
       },
