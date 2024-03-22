@@ -1,3 +1,4 @@
+<!-- https://github.com/vuejs/babel-plugin-jsx -->
 <script setup lang="tsx">
 import { reactive, onMounted } from "vue";
 
