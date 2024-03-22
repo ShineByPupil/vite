@@ -41,6 +41,27 @@ export const routes = [
         name: "bigint",
         component: () => import("@/views/student/bigInt/BigInt.vue"),
       },
+      {
+        path: "vueJsx",
+        name: "vueJsx",
+        children: [
+          {
+            path: "demo1",
+            name: "demo1",
+            component: () => import("@/views/student/vueJsx/demo1.vue"),
+          },
+          {
+            path: "demo2",
+            name: "demo2",
+            component: () => import("@/views/student/vueJsx/demo2.vue"),
+          },
+          {
+            path: "demo3",
+            name: "demo3",
+            component: () => import("@/views/student/vueJsx/demo3.vue"),
+          },
+        ],
+      },
     ],
   },
 ];
