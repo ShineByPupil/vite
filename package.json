@@ -11,6 +11,7 @@
   "dependencies": {
     "@surely-vue/table": "^4.3.0",
     "ant-design-vue": "^4.1.2",
+    "axios": "^1.6.8",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

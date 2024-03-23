@@ -14,6 +14,11 @@ export const routes = [
     component: () => import("../views/login/Login.vue"),
   },
   {
+    path: "/report",
+    name: "report",
+    component: () => import("../views/report/Report.vue"),
+  },
+  {
     path: "/student",
     name: "student",
     component: () => import("../views/student/Student.vue"),
@@ -58,6 +63,11 @@ export const routes = [
             component: () => import("@/views/student/vueJsx/demo4.vue"),
           },
         ],
+      },
+      {
+        path: "websoket",
+        name: "websoket",
+        component: () => import("../views/student/websoket/Websoket.vue"),
       },
     ],
   },
