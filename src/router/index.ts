@@ -69,6 +69,11 @@ export const routes = [
         name: "websoket",
         component: () => import("../views/student/websoket/Websoket.vue"),
       },
+      {
+        path: "optionsApi",
+        name: "optionsApi",
+        component: () => import("../views/student/optionsAPI/OptionsAPI.vue"),
+      },
     ],
   },
 ];
