@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { reactive, h, getCurrentInstance, ref } from "vue";
+import { reactive, h, getCurrentInstance, ref, computed } from "vue";
+import cloneDeep from "lodash/cloneDeep";
+
 (window as any).v = getCurrentInstance();
 import { useRouter } from "vue-router";
 import { routes } from "@/router/index";
@@ -36,6 +38,33 @@ const menuRef = ref<any>();
 
 const items = getItem(routes);
 
+function filter(items, keyword) {
+  return items.filter((item) => {
+    // 检查路由名称是否匹配关键词
+    const isMatched = item.label.toLowerCase().includes(keyword.toLowerCase());
+
+    if (isMatched) {
+      // 如果路由名称匹配，则返回该路由对象
+      return true;
+    } else if (item.children) {
+      // 如果路由有子路由，则递归筛选子路由
+      item.children = filter(item.children, keyword);
+      // 如果子路由筛选结果非空，则保留该路由对象
+      return item.children.length > 0;
+    }
+
+    // 路由名称不匹配且没有子路由，则过滤掉该路由对象
+    return false;
+  });
+}
+const keyword = ref("");
+
+const items_filter = computed(() => {
+  return keyword.value ? filter(cloneDeep(items), keyword.value) : items;
+});
+
+Object.assign(window, { filter, keyword, items, items_filter });
+
 const toggleCollapsed = () => {
   state.collapsed = !state.collapsed;
 };
@@ -50,38 +79,39 @@ const handleOpenChange = (openKeys: string[]) => {
 };
 
 // 更新侧边栏的状态
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   if ((to.path.match(/\//g) || []).length > 1) {
     state.selectedKeys[0] = /[^/]*$/.exec(to.path)![0];
-    let _openKeys = to.path.split("/").filter(Boolean);
-    _openKeys[0] = "/" + _openKeys[0];
-    state.openKeys = _openKeys;
+    // let _openKeys = to.path.split("/").filter(Boolean);
+    // _openKeys[0] = "/" + _openKeys[0];
+    // state.openKeys = _openKeys;
   } else {
     state.selectedKeys[0] = to.path;
-    state.openKeys = to.path.match(/\/[^/]*/g) || ["/"];
+    // state.openKeys = to.path.match(/\/[^/]*/g) || ["/"];
   }
-
-  console.log("beforeEach", to, from);
 });
 </script>
 
 <template>
-  <a-button type="primary" @click="toggleCollapsed">
-    <MenuUnfoldOutlined v-if="state.collapsed" />
-    <MenuFoldOutlined v-else />
-  </a-button>
+  <div class="menu">
+    <a-button type="primary" @click="toggleCollapsed">
+      <MenuUnfoldOutlined v-if="state.collapsed" />
+      <MenuFoldOutlined v-else />
+    </a-button>
 
-  <a-menu
-    ref="menuRef"
-    v-model:openKeys="state.openKeys"
-    v-model:selectedKeys="state.selectedKeys"
-    style="max-width: 256px"
-    mode="inline"
-    :items="items"
-    :inline-collapsed="state.collapsed"
-    @click="handleClick"
-    @openChange="handleOpenChange"
-  ></a-menu>
+    <a-input v-model:value="keyword" placeholder="input search text" />
+
+    <a-menu
+      ref="menuRef"
+      v-model:openKeys="state.openKeys"
+      v-model:selectedKeys="state.selectedKeys"
+      mode="inline"
+      :items="items_filter"
+      :inline-collapsed="state.collapsed"
+      @click="handleClick"
+      @openChange="handleOpenChange"
+    />
+  </div>
 
   <router-view></router-view>
 </template>
@@ -91,8 +121,13 @@ router.beforeEach((to, from) => {
   display: flex;
 }
 </style>
-<style scoped>
-.ant-menu {
+
+<style scoped lang="scss">
+.menu {
   box-shadow: 3px 0px 5px #cfcfcf;
+
+  .ant-menu {
+    max-width: 256px;
+  }
 }
 </style>
