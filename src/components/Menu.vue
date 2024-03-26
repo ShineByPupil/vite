@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, h, computed } from "vue";
+import { reactive, ref, h, computed, VNode } from "vue";
 import cloneDeep from "lodash/cloneDeep";
 import { useRouter } from "vue-router";
 import { routes } from "@/router/index";
@@ -35,12 +35,43 @@ function getItem(list: any[]): ItemType[] {
   });
 }
 
+// 关键词着色
+function highlightKeyword(items, keyword) {
+  if (!keyword) return;
+
+  let re = new RegExp(keyword, "ig");
+
+  items.forEach((item) => {
+    if (re.test(item.label)) {
+      // 未匹配字符串集合
+      let notMatched: string[] = item.label.split(re);
+      let matched: VNode[] = item.label
+        .match(re)
+        .map((n) => h("span", { style: { color: "red" } }, n));
+      let list: (string | VNode)[] = [];
+
+      while (notMatched.length) {
+        list.push(notMatched.shift() || "");
+        list.push(matched.shift() || "");
+      }
+
+      item.label = h("span", {}, list);
+    }
+
+    if (item.children) {
+      highlightKeyword(item.children, keyword);
+    }
+  });
+}
+
 function filter(items, keyword) {
   return items.filter((item) => {
     // 检查路由名称是否匹配关键词
     const isMatched = item.label.toLowerCase().includes(keyword.toLowerCase());
 
     if (isMatched) {
+      highlightKeyword([item], keyword);
+
       // 如果路由名称匹配，则返回该路由对象
       return true;
     } else if (item.children) {
@@ -80,19 +111,15 @@ router.beforeEach((to) => {
   }
 });
 
-Object.assign(window, { filter, keyword, items, items_filter });
+Object.assign(window, { filter, keyword, items, items_filter, h });
 </script>
 
 <template>
-  <div class="menu">
-    <a-button type="primary" @click="toggleCollapsed">
-      <MenuUnfoldOutlined v-if="state.collapsed" />
-      <MenuFoldOutlined v-else />
-    </a-button>
-
-    <a-input v-model:value="keyword" placeholder="input search text" />
+  <div class="menu" :class="{ 'inline-collapsed': state.collapsed }">
+    <a-input v-model:value="keyword" placeholder="search" />
 
     <a-menu
+      class="container"
       ref="menuRef"
       v-model:openKeys="state.openKeys"
       v-model:selectedKeys="state.selectedKeys"
@@ -102,17 +129,55 @@ Object.assign(window, { filter, keyword, items, items_filter });
       @click="handleClick"
       @openChange="handleOpenChange"
     />
+
+    <a-button type="primary" @click="toggleCollapsed">
+      <MenuUnfoldOutlined v-if="state.collapsed" />
+      <MenuFoldOutlined v-else />
+    </a-button>
   </div>
 </template>
 
 <style scoped lang="scss">
 .menu {
   box-shadow: 3px 0px 5px #cfcfcf;
+  width: 256px;
+  transition: width 0.2s;
+
+  &.inline-collapsed {
+    width: 80px;
+  }
+
+  .ant-input {
+    width: calc(100% - 12px);
+    margin: 6px;
+  }
 
   .ant-menu {
-    &:not(.ant-menu-inline-collapsed) {
-      width: 256px;
-    }
+    height: calc(100% - 76px);
+  }
+
+  .ant-btn {
+    width: 100%;
+    border-radius: 0%;
+  }
+}
+
+// 滚动条样式
+.container {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
   }
 }
 </style>
