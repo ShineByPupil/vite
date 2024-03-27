@@ -139,7 +139,8 @@ Object.assign(window, { filter, keyword, items, items_filter, h });
 
 <style scoped lang="scss">
 .menu {
-  box-shadow: 3px 0px 5px #cfcfcf;
+  z-index: 1;
+  box-shadow: 6px 0px 5px #dddddd;
   width: 256px;
   transition: width 0.2s;
 
