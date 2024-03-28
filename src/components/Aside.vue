@@ -115,7 +115,7 @@ Object.assign(window, { filter, keyword, items, items_filter, h });
 </script>
 
 <template>
-  <div class="menu" :class="{ 'inline-collapsed': state.collapsed }">
+  <aside :class="{ 'inline-collapsed': state.collapsed }">
     <a-input v-model:value="keyword" placeholder="search" />
 
     <a-menu
@@ -134,15 +134,15 @@ Object.assign(window, { filter, keyword, items, items_filter, h });
       <MenuUnfoldOutlined v-if="state.collapsed" />
       <MenuFoldOutlined v-else />
     </a-button>
-  </div>
+  </aside>
 </template>
 
 <style scoped lang="scss">
-.menu {
-  z-index: 1;
-  box-shadow: 6px 0px 5px #dddddd;
+aside {
   width: 256px;
   transition: width 0.2s;
+  overflow: hidden;
+  border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
 
   &.inline-collapsed {
     width: 80px;
@@ -155,6 +155,7 @@ Object.assign(window, { filter, keyword, items, items_filter, h });
 
   .ant-menu {
     height: calc(100% - 76px);
+    border-inline-end: none;
   }
 
   .ant-btn {

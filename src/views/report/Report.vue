@@ -142,7 +142,7 @@ Object.assign(window, { pagination, selectedRowKeys, dataSource });
       "
       :pagination="pagination"
       size="small"
-      :scroll="{ y: 'calc(100vh - 147px' }"
+      :scroll="{ y: 'calc(100vh - 200PX' }"
       @change="handleTableChange"
     />
 
@@ -157,32 +157,13 @@ Object.assign(window, { pagination, selectedRowKeys, dataSource });
 
 <style scoped lang="scss">
 .report {
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 10px;
-  background-color: #f2f2f2;
 
   .ant-btn-group {
     margin-bottom: 10px;
-  }
-
-  ::v-deep(.ant-table-body) {
-    height: 800px !important;
-    overflow: auto;
-    // &::-webkit-scrollbar {
-    //   width: 8px;
-    // }
-    // &::-webkit-scrollbar-track {
-    //   background-color: #f1f1f1;
-    // }
-    // &::-webkit-scrollbar-thumb {
-    //   background-color: #888;
-    //   border-radius: 5px;
-    // }
-    // &::-webkit-scrollbar-thumb:hover {
-    //   background-color: #555;
-    // }
   }
 }
 </style>
