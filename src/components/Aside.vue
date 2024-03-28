@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref, h, computed, VNode } from "vue";
 import cloneDeep from "lodash/cloneDeep";
-import { useRouter } from "vue-router";
+import { useRouter, RouteRecordName } from "vue-router";
 import { routes } from "@/router/index";
 import {
   BarsOutlined,
@@ -10,12 +10,13 @@ import {
   MenuFoldOutlined,
 } from "@ant-design/icons-vue";
 import type { MenuProps, ItemType } from "ant-design-vue";
+import type { stateType } from "./Aside";
 
 const router = useRouter();
-const state = reactive({
+const state: stateType = reactive({
   collapsed: false, // inline 时菜单是否收起状态
-  selectedKeys: ["/"], // 当前选中的菜单项 key 数组
-  openKeys: [] as string[], // 当前展开的 SubMenu 菜单项 key 数组
+  selectedKeys: [], // 当前选中的菜单项 key 数组
+  openKeys: [], // 当前展开的 SubMenu 菜单项 key 数组
 });
 const menuRef = ref<any>();
 const items = getItem(routes);
@@ -28,7 +29,7 @@ function getItem(list: any[]): ItemType[] {
   return list.map((n) => {
     return {
       label: n.name,
-      key: n.path,
+      key: n.name,
       icon: () => h(n.children ? BarsOutlined : FileOutlined),
       children: n.children ? getItem(n.children) : undefined,
     };
@@ -91,7 +92,7 @@ const toggleCollapsed = () => {
 
 const handleClick: MenuProps["onClick"] = (e) => {
   console.log("click", e);
-  router.push({ path: e.keyPath!.join("/") });
+  router.push({ name: e.key as RouteRecordName });
 };
 
 const handleOpenChange = (openKeys: string[]) => {
@@ -100,18 +101,18 @@ const handleOpenChange = (openKeys: string[]) => {
 
 // 更新侧边栏的状态
 router.beforeEach((to) => {
-  if ((to.path.match(/\//g) || []).length > 1) {
-    state.selectedKeys[0] = /[^/]*$/.exec(to.path)![0];
-    // let _openKeys = to.path.split("/").filter(Boolean);
-    // _openKeys[0] = "/" + _openKeys[0];
-    // state.openKeys = _openKeys;
-  } else {
-    state.selectedKeys[0] = to.path;
-    // state.openKeys = to.path.match(/\/[^/]*/g) || ["/"];
-  }
+  state.selectedKeys = [to.name];
 });
 
-Object.assign(window, { filter, keyword, items, items_filter, h });
+Object.assign(window, {
+  filter,
+  keyword,
+  items,
+  items_filter,
+  h,
+  router,
+  state,
+});
 </script>
 
 <template>
