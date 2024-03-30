@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside.vue";
+
+import { reactive, computed } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const route_cache_include = computed(
+  () => store.getters["route_cache_include"]
+);
+
+const include = reactive([]);
+
+Object.assign(window, { include });
 </script>
 
 <template>
@@ -9,7 +22,11 @@ import Aside from "@/components/Aside.vue";
   <Aside />
 
   <main>
-    <router-view></router-view>
+    <router-view v-slot="{ Component }">
+      <keep-alive :max="store.route_cache_max" :include="route_cache_include">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
   </main>
 </template>
 
