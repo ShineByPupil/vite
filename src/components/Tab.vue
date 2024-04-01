@@ -1,4 +1,6 @@
-<script setup lang="tsx">
+<script setup lang="ts">
+import { computed } from "vue";
+import Space from "./Space.vue";
 import { CloseOutlined } from "@ant-design/icons-vue";
 import { useRouter, RouteRecordName } from "vue-router";
 
@@ -7,7 +9,9 @@ const props = defineProps<{
   list: Set<RouteRecordName>;
 }>();
 const router = useRouter();
-
+const index = computed(() => {
+  return Array.from(props.list).indexOf(props.active);
+});
 function handleClose(name: RouteRecordName) {
   if (name === props.active) {
     router.back();
@@ -18,27 +22,31 @@ function handleClose(name: RouteRecordName) {
 
 <template>
   <div class="tabs-wrap">
-    <div
-      v-for="item in props.list"
-      class="tab"
-      :class="{ active: props.active && item === props.active }"
-    >
-      <div class="before"></div>
-      <div class="content">
-        <router-link :to="{ name: item }">
-          {{ item }}
-          <CloseOutlined size="small" @click="handleClose(item)" />
-        </router-link>
-      </div>
-      <div class="after"></div>
-    </div>
+    <template v-for="(item, i) in props.list">
+      <Space
+        :type="index === i ? 'left' : index + 1 === i ? 'right' : 'default'"
+      />
+
+      <router-link
+        :to="{ name: item }"
+        class="tab"
+        :class="{ active: index === i }"
+      >
+        <span class="text">{{ item }}</span>
+        <CloseOutlined size="small" @click="handleClose(item)" />
+      </router-link>
+    </template>
+
+    <Space :type="index === props.list.size - 1 ? 'right' : 'default'" />
   </div>
 </template>
 
 <style scoped lang="scss">
+$light-color: #fff;
+$dark-color: #f5f5f5;
+
 $active-color: #1890ff;
 $hover-color: #f5f5f5;
-$bg-color: #f5f5f5;
 $border-radius: 16px;
 $space: 10px;
 
@@ -46,82 +54,43 @@ $space: 10px;
   padding-top: 6px;
   display: flex;
   height: 100%;
-  background-color: $bg-color;
+  background-color: $dark-color;
 
-  .tab {
-    display: flex;
+  a {
     height: 100%;
-    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 
-    .content {
-      display: flex;
-      align-items: center;
+    .text {
+      padding: 5px 12px;
     }
 
-    .before,
-    .after {
-      width: $space;
-      height: 100%;
-      background-color: #f5f5f5;
+    .anticon {
+      position: absolute;
+      transform: translateY(-50%);
+      top: 50%;
+      right: -12px;
+      transition: right 0.4s;
     }
 
-    a {
-      position: relative;
-      padding: 6px 20px;
-      overflow: hidden;
-
-      .anticon {
-        position: absolute;
-        transform: translateY(-50%);
-        top: 50%;
-        right: -15px;
-        transition: right 0.4s;
-      }
-      &:hover .anticon {
-        right: 5px;
-      }
+    &:hover .anticon {
+      right: 0px;
     }
+  }
+  a.active {
+    background-color: $light-color;
+  }
+  a:not(.active) {
+    background-color: $dark-color;
 
-    &.active {
-      background-color: #f5f5f5;
+    .text {
+      border-radius: 12px;
+      transition: background-color 0.4s;
 
-      .before,
-      .content,
-      .after {
-        background-color: #fff;
-      }
-
-      .before {
-        border-top-left-radius: $border-radius;
-      }
-      .after {
-        border-top-right-radius: $border-radius;
-      }
-    }
-
-    &:not(.active) {
-      background-color: #fff;
-
-      .before,
-      .content,
-      .after {
-        background-color: #f5f5f5;
-      }
-
-      a {
-        border-radius: 15px;
-        transition: background-color 0.4s;
-
-        &:hover:not(.active) {
-          background-color: #ccc;
-        }
-      }
-
-      .before {
-        border-bottom-left-radius: $border-radius;
-      }
-      .after {
-        border-bottom-right-radius: $border-radius;
+      &:hover {
+        background-color: #ccc;
       }
     }
   }
