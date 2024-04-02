@@ -11,6 +11,7 @@ const store: Store<RootState> = createStore({
   getters: {
     route_cache_include: (state) => Array.from(state.route_cache_set),
   },
+
   mutations: {
     increment: (state) => {
       state.commonCount++;
@@ -18,7 +19,11 @@ const store: Store<RootState> = createStore({
     route_cache_set_add(state, name: RouteRecordName) {
       state.route_cache_set.add(name);
     },
+    route_cache_set_del(state, name: RouteRecordName) {
+      state.route_cache_set.delete(name);
+    },
   },
+
   modules: {},
 });
 
