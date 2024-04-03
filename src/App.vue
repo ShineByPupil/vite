@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import Login from "./views/login/Login.vue";
 import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside.vue";
 
-import { reactive, computed } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -10,28 +11,30 @@ const store = useStore();
 const route_cache_include = computed(
   () => store.getters["route_cache_include"]
 );
-
-const include = reactive([]);
-
-Object.assign(window, { include });
+const isLogin = ref(false);
 </script>
 
 <template>
-  <Header />
+  <div class="app" v-if="isLogin">
+    <Header />
 
-  <Aside />
+    <Aside />
 
-  <main>
-    <router-view v-slot="{ Component }">
-      <keep-alive :max="store.route_cache_max" :include="route_cache_include">
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
-  </main>
+    <main>
+      <router-view v-slot="{ Component }">
+        <keep-alive :max="store.route_cache_max" :include="route_cache_include">
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
+    </main>
+  </div>
+
+  <Login v-else />
 </template>
 
 <style lang="scss">
-#app {
+#app .app {
+  height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;

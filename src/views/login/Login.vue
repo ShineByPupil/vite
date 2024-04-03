@@ -1,15 +1,27 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Form from "./Form.vue";
+</script>
 
 <template>
-  <div>login</div>
-
-  <a-space>
-    <a-button type="primary">Primary Button</a-button>
-    <a-button>Default Button</a-button>
-    <a-button type="dashed">Dashed Button</a-button>
-    <a-button type="text">Text Button</a-button>
-    <a-button type="link">Link Button</a-button>
-  </a-space>
+  <div class="login">
+    <Form />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.login {
+  position: relative;
+  background-color: #feebc1;
+  background-image: url(../../assets/images/bg.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  overflow: hidden;
+
+  width: 100%;
+  height: 100%;
+
+  form {
+    margin: 40vh auto 0 auto;
+  }
+}
+</style>

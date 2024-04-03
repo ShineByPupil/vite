@@ -7,12 +7,6 @@ export const routes = [
     name: "Home",
     component: Home,
   },
-  // 在这里添加更多路由
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("../views/login/Login.vue"),
-  },
   {
     path: "/report",
     name: "report",
