@@ -68,6 +68,12 @@ export const routes = [
         name: "optionsApi",
         component: () => import("../views/student/optionsAPI/OptionsAPI.vue"),
       },
+      {
+        path: "refAndReactive",
+        name: "refAndReactive",
+        component: () =>
+          import("../views/student/refAndReactive/RefAndReactive.vue"),
+      },
     ],
   },
 ];
