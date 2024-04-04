@@ -1,39 +1,44 @@
 <script setup lang="ts">
-import Login from "./views/login/Login.vue";
 import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside.vue";
 
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 const store = useStore();
-
+const router = useRouter();
 const route_cache_include = computed(
   () => store.getters["route_cache_include"]
 );
-const isLogin = ref(false);
+
+router.beforeEach((to, from, next) => {
+  console.log(from); // todo delete
+  isLogin.value = to.name === "login";
+
+  next();
+});
+const isLogin = ref(true);
 </script>
 
 <template>
-  <div class="app" v-if="isLogin">
+  <template v-if="!isLogin">
     <Header />
 
     <Aside />
+  </template>
 
-    <main>
-      <router-view v-slot="{ Component }">
-        <keep-alive :max="store.route_cache_max" :include="route_cache_include">
-          <component :is="Component" />
-        </keep-alive>
-      </router-view>
-    </main>
-  </div>
-
-  <Login v-else />
+  <main>
+    <router-view v-slot="{ Component }">
+      <keep-alive :max="store.route_cache_max" :include="route_cache_include">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+  </main>
 </template>
 
 <style lang="scss">
-#app .app {
+#app {
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
