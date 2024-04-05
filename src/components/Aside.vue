@@ -27,6 +27,12 @@ const menu_list_filter = computed(() => {
     : menu_list.value;
 });
 
+/**
+ * 根据输入列表生成一个 ItemType 对象数组。
+ *
+ * @param {any[]} list - 要转换为 ItemType 对象的项目列表
+ * @return {ItemType[]} 一个 ItemType 对象数组
+ */
 function getItem(list: any[]): ItemType[] {
   return list.map((n) => {
     return {
@@ -39,7 +45,12 @@ function getItem(list: any[]): ItemType[] {
   });
 }
 
-// 关键词着色
+/**
+ * 关键词着色。在给定的项目中突出显示关键字的函数。
+ *
+ * @param {Array} items - 要突出显示的项目数组。
+ * @param {string} keyword - 要突出显示的关键字。
+ */
 function highlightKeyword(items, keyword) {
   if (!keyword) return;
 
@@ -68,6 +79,13 @@ function highlightKeyword(items, keyword) {
   });
 }
 
+/**
+ * 根据提供的关键词对项目数组进行过滤。
+ *
+ * @param {Array} items - 要过滤的项目数组。
+ * @param {string} keyword - 要根据的关键词进行过滤。
+ * @return {Array} 过滤后的项目数组。
+ */
 function filter(items, keyword) {
   return items.filter((item) => {
     // 检查路由名称是否匹配关键词
@@ -90,19 +108,36 @@ function filter(items, keyword) {
   });
 }
 
+/**
+ * 切换折叠状态。
+ */
 function toggleCollapsed() {
   state.collapsed = !state.collapsed;
 }
 
+/**
+ * 处理点击事件，通过将新路由推送到路由器。
+ *
+ * @param {Event} e - 触发函数的事件对象。
+ * @return {void}
+ */
 function handleClick(e) {
-  console.log("click", e);
   router.push({ name: e.key as RouteRecordName });
 }
 
+/**
+ * 一个处理打开键变化的函数。
+ *
+ * @param {string[]} openKeys - 一个打开键的数组
+ * @return {void}
+ */
 function handleOpenChange(openKeys: string[]) {
   console.log("handleOpenChange:", openKeys);
 }
 
+/**
+ * 从 API 获取菜单并更新菜单列表。
+ */
 function getMemu() {
   axios.get("/api/getMenu").then((res) => {
     menu_list.value = getItem(res.data.menu_list);
