@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { reactive, ref, h, computed, VNode } from "vue";
+import { reactive, ref, h, computed, VNode, onBeforeMount } from "vue";
 import cloneDeep from "lodash/cloneDeep";
 import { useRouter, RouteRecordName } from "vue-router";
-import { routes } from "@/router/index";
 import {
   BarsOutlined,
   FileOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from "@ant-design/icons-vue";
-import type { MenuProps, ItemType } from "ant-design-vue";
+import type { ItemType } from "ant-design-vue";
 import type { stateType } from "./Aside";
+import axios from "axios";
 
 const router = useRouter();
 const state: stateType = reactive({
@@ -19,19 +19,22 @@ const state: stateType = reactive({
   openKeys: [], // 当前展开的 SubMenu 菜单项 key 数组
 });
 const menuRef = ref<any>();
-const items = getItem(routes);
+const menu_list = ref<ItemType[]>([]);
 const keyword = ref("");
-const items_filter = computed(() => {
-  return keyword.value ? filter(cloneDeep(items), keyword.value) : items;
+const menu_list_filter = computed(() => {
+  return keyword.value
+    ? filter(cloneDeep(menu_list.value), keyword.value)
+    : menu_list.value;
 });
 
 function getItem(list: any[]): ItemType[] {
   return list.map((n) => {
     return {
       label: n.name,
-      key: n.name,
+      key: n.route_name,
       icon: () => h(n.children ? BarsOutlined : FileOutlined),
-      children: n.children ? getItem(n.children) : undefined,
+      children:
+        n.children && n.children.length ? getItem(n.children) : undefined,
     };
   });
 }
@@ -86,32 +89,33 @@ function filter(items, keyword) {
     return false;
   });
 }
-const toggleCollapsed = () => {
-  state.collapsed = !state.collapsed;
-};
 
-const handleClick: MenuProps["onClick"] = (e) => {
+function toggleCollapsed() {
+  state.collapsed = !state.collapsed;
+}
+
+function handleClick(e) {
   console.log("click", e);
   router.push({ name: e.key as RouteRecordName });
-};
+}
 
-const handleOpenChange = (openKeys: string[]) => {
+function handleOpenChange(openKeys: string[]) {
   console.log("handleOpenChange:", openKeys);
-};
+}
+
+function getMemu() {
+  axios.get("/api/getMenu").then((res) => {
+    menu_list.value = getItem(res.data.menu_list);
+  });
+}
+
+onBeforeMount(() => {
+  getMemu();
+});
 
 // 更新侧边栏的状态
 router.beforeEach((to) => {
   state.selectedKeys = [to.name];
-});
-
-Object.assign(window, {
-  filter,
-  keyword,
-  items,
-  items_filter,
-  h,
-  router,
-  state,
 });
 </script>
 
@@ -125,7 +129,7 @@ Object.assign(window, {
       v-model:openKeys="state.openKeys"
       v-model:selectedKeys="state.selectedKeys"
       mode="inline"
-      :items="items_filter"
+      :items="menu_list_filter"
       :inline-collapsed="state.collapsed"
       @click="handleClick"
       @openChange="handleOpenChange"
