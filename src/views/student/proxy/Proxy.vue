@@ -15,7 +15,7 @@ let _obj = new Proxy(obj, {
   },
 });
 
-Object.assign(window as any, { obj, _obj });
+console.log("", obj, "\n", _obj);
 </script>
 
 <template>Proxy</template>

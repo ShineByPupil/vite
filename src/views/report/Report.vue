@@ -113,8 +113,6 @@ function handleTableChange(pag) {
 onMounted(() => {
   handleQuery();
 });
-
-Object.assign(window, { pagination, selectedRowKeys, dataSource });
 </script>
 
 <template>

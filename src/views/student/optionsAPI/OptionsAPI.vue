@@ -21,10 +21,7 @@ export default {
   // 生命周期钩子会在组件生命周期的各个不同阶段被调用
   // 例如这个函数就会在组件挂载完成后被调用
   mounted() {
-    Object.assign(window, {
-      v1: this,
-      v2: getCurrentInstance(),
-    });
+    console.log("", this, "\n", getCurrentInstance());
     console.log(`The initial count is ${this.count}.`);
   },
 };

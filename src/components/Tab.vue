@@ -20,14 +20,6 @@ function handleClose(name: RouteRecordName) {
   }
   store.commit("route_cache_set_del", name);
 }
-
-Object.assign(window, {
-  store,
-  list,
-  index,
-  route_name,
-  route_cache_set: store.state.route_cache_set,
-});
 </script>
 
 <template>

@@ -72,8 +72,6 @@ function handleOk() {
       });
   });
 }
-
-Object.assign(window, { props, formRef, formState, rules, labelCol, handleOk });
 </script>
 
 <template>
