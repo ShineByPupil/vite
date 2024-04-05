@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store";
+
 import Home from "../views/Home.vue";
 
 export const routes = [
@@ -86,6 +88,28 @@ export const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  // 判断是否登录页，控制导航栏隐藏
+  store.commit("updateIsLogin", to.name === "login");
+
+  // 更新tab缓存
+  store.state.route_cache_set.has(to.name) ||
+    store.commit("route_cache_set_add", to.name);
+
+  // 判断缓存数量
+  if (store.state.route_cache_set.size > store.state.route_cache_max) {
+    store.commit(
+      "route_cache_set_del",
+      store.state.route_cache_set.values().next().value
+    );
+  }
+
+  // 更新tab名
+  store.commit("updateRouteName", to.name);
+
+  next();
 });
 
 export default router;

@@ -2,23 +2,13 @@
 import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside.vue";
 
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { computed } from "vue";
+import store from "@/store";
 
-const store = useStore();
-const router = useRouter();
-const route_cache_include = computed(
+const route_cache_include = computed<[]>(
   () => store.getters["route_cache_include"]
 );
-
-router.beforeEach((to, from, next) => {
-  console.log(from); // todo delete
-  isLogin.value = to.name === "login";
-
-  next();
-});
-const isLogin = ref(true);
+const isLogin = computed<boolean>(() => store.state.isLogin);
 </script>
 
 <template>

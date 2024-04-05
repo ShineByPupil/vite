@@ -6,6 +6,8 @@ const store: Store<RootState> = createStore({
   state: {
     route_cache_max: 10,
     route_cache_set: new Set(),
+    isLogin: false,
+    route_name: "",
   },
 
   getters: {
@@ -21,6 +23,12 @@ const store: Store<RootState> = createStore({
     },
     route_cache_set_del(state, name: RouteRecordName) {
       state.route_cache_set.delete(name);
+    },
+    updateIsLogin(state, flag) {
+      state.isLogin = flag;
+    },
+    updateRouteName(state, name) {
+      state.route_name = name;
     },
   },
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, h, computed, VNode, onBeforeMount } from "vue";
+import { reactive, ref, h, computed, watch, VNode, onBeforeMount } from "vue";
 import cloneDeep from "lodash/cloneDeep";
 import { useRouter, RouteRecordName } from "vue-router";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons-vue";
 import type { ItemType } from "ant-design-vue";
 import type { stateType } from "./Aside";
+import store from "@/store";
 import axios from "axios";
 
 const router = useRouter();
@@ -26,6 +27,14 @@ const menu_list_filter = computed(() => {
     ? filter(cloneDeep(menu_list.value), keyword.value)
     : menu_list.value;
 });
+
+watch(
+  () => store.state.route_name,
+  () => {
+    // 更新侧边栏的状态
+    state.selectedKeys = [store.state.route_name];
+  }
+);
 
 /**
  * 根据输入列表生成一个 ItemType 对象数组。
@@ -146,11 +155,6 @@ function getMemu() {
 
 onBeforeMount(() => {
   getMemu();
-});
-
-// 更新侧边栏的状态
-router.beforeEach((to) => {
-  state.selectedKeys = [to.name];
 });
 </script>
 

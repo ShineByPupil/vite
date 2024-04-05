@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
+import { computed } from "vue";
+import store from "@/store";
 import { useRouter, RouteRecordName } from "vue-router";
 import { CloseOutlined } from "@ant-design/icons-vue";
 import Space from "./Space.vue";
 
-const route_name = ref<RouteRecordName>("");
-const store = useStore();
+const route_name = computed<RouteRecordName>(() => store.state.route_name);
 const router = useRouter();
 const list = computed<Array<RouteRecordName>>(() =>
   Array.from(store.state.route_cache_set)
@@ -21,14 +20,6 @@ function handleClose(name: RouteRecordName) {
   }
   store.commit("route_cache_set_del", name);
 }
-
-// 更新侧边栏的状态
-router.beforeEach((to) => {
-  store.state.route_cache_set.has(to.name) ||
-    store.commit("route_cache_set_add", to.name);
-
-  route_name.value = to.name as RouteRecordName;
-});
 
 Object.assign(window, {
   store,
