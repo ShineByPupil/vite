@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, reactive, watch } from "vue";
 import { message } from "ant-design-vue";
-import axios from "axios";
+import request from "@/request";
 
 const emits = defineEmits(["updateRow"]); // 声明要触发的事件
 const props = defineProps({
@@ -34,7 +34,7 @@ const labelCol = {
 watch(open, (value) => {
   if (value) {
     if (props.type === "edit") {
-      axios
+      request
         .post("/api/user/detail", {
           id: props.id,
         })
@@ -60,7 +60,7 @@ function handleOk() {
     const params =
       props.type === "add" ? formState : { id: props.id, ...formState };
 
-    axios
+    request
       .post(url, params)
       .then((res) => {
         emits("updateRow", { id: res.data.id, type: props.type });

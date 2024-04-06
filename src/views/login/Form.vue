@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-import axios from "axios";
+import request from "@/request";
 import router from "@/router";
 
 interface FormState {
@@ -19,9 +19,8 @@ const isAnimating = ref(false);
 
 function onFinish(values: any) {
   console.log("Success:", values);
-  axios.post("/api/login", values).then((res) => {
+  request.post("/api/login", values).then((res) => {
     if (res.status === 200) {
-      axios.defaults.headers.common["Authorization"] = res.data.accessToken;
       router.push("/");
     }
   });

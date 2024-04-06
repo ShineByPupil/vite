@@ -11,7 +11,7 @@ import {
 import type { ItemType } from "ant-design-vue";
 import type { stateType } from "./Aside";
 import store from "@/store";
-import axios from "axios";
+import request from "@/request";
 
 const router = useRouter();
 const state: stateType = reactive({
@@ -148,7 +148,7 @@ function handleOpenChange(openKeys: string[]) {
  * 从 API 获取菜单并更新菜单列表。
  */
 function getMemu() {
-  axios.get("/api/getMenu").then((res) => {
+  request.get("/api/getMenu").then((res) => {
     menu_list.value = getItem(res.data.menu_list);
   });
 }

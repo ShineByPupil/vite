@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive } from "vue";
 import { message } from "ant-design-vue";
-import axios from "axios";
+import request from "@/request";
 
 let dataSource = ref<any>([]); // todo type
 
@@ -35,7 +35,7 @@ function handleQuery() {
     current: pagination.value.current,
     pageSize: pagination.value.pageSize,
   };
-  axios.post("/api/user/query", params).then((res) => {
+  request.post("/api/user/query", params).then((res) => {
     dataSource.value = res.data.list;
     pagination.value.total = res.data.total;
   });
@@ -67,7 +67,7 @@ function handleDelete() {
   if (selectedRowKeys.value.length === 0) {
     message.warning("请选择数据");
   } else {
-    axios
+    request
       .post("/api/user/delete", { id_list: selectedRowKeys.value })
       .then(() => {
         message.success("删除成功");
@@ -77,7 +77,7 @@ function handleDelete() {
 }
 
 function updateRow({ id, type }) {
-  axios.post("/api/user/detail", { id }).then((res) => {
+  request.post("/api/user/detail", { id }).then((res) => {
     if (type === "add") {
       dataSource.value.unshift(res.data);
     } else {
