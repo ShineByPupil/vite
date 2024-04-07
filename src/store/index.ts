@@ -6,7 +6,7 @@ const store: Store<RootState> = createStore({
   state: {
     route_cache_max: 10,
     route_cache_set: new Set(),
-    isLogin: false,
+    isLogin: true,
     route_name: "",
   },
 

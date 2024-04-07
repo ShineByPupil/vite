@@ -47,7 +47,6 @@ const isLogin = computed<boolean>(() => store.state.isLogin);
 
   > main {
     grid-area: main;
-    padding: 10px;
     background-color: #f2f2f2;
     overflow: hidden;
   }
