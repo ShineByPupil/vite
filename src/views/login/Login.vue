@@ -12,7 +12,7 @@ import Form from "./Form.vue";
 .login {
   position: relative;
   background-color: #feebc1;
-  background-image: url(../../assets/images/bg.jpg);
+  background-image: url(./../public/images/bg.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   overflow: hidden;

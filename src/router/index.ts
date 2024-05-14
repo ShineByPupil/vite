@@ -90,7 +90,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   // 判断是否登录页，控制导航栏隐藏
   store.commit("updateIsLogin", to.name === "login");
 
